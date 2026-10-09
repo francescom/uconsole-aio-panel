@@ -2,20 +2,7 @@
 
 A small graphical control panel for the **ClockworkPi uConsole AIO board**: power each module on or off and pick what the SDR and GPS are used for, without touching the terminal.
 
-```
-☐ WiFi 1200 (Wireless network)
-☐ GPS (Position, 1575MHz)
-☐ LoRa (Meshtastic, 868MHz)
-☐ SDR (Radio receiver)
-
-SDR use:  TAR (Aircraft, 1090MHz, ¼λ 6.9cm)
-          AIS (Ships, 162MHz, ¼λ 46cm)
-          SDR++ (Free listening)
-
-GPS use:  NMEA (Raw serial data)
-          GPSD (Position for maps and apps)
-          Signal K (Marine navigation)
-```
+![AIO Control panel](docs/screenshot.png)
 
 ## What it does
 
