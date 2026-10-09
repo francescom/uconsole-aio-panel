@@ -55,6 +55,28 @@ The installer:
 
 **Signal K:** the first time you open http://localhost:3000, create the admin user right away. Until you do, anyone on the same network could create it.
 
+## Installed files
+
+| What | Where |
+|------|-------|
+| Panel | `/usr/local/bin/uconsole-aio-panel` |
+| "AIO Control" menu entry | `/usr/share/applications/aio-control.desktop` |
+| Last selected modes | `~/.config/uconsole-aio-panel.conf` |
+| AIS-catcher (optional) | `ais-catcher` apt package (`/usr/bin/AIS-catcher`, private libraries in `/usr/lib/ais-catcher`) and the service `/etc/systemd/system/ais-catcher.service` |
+| Signal K (optional) | `~/signalk/` (Node.js, Signal K and its config) and the user service `~/.config/systemd/user/signalk.service` |
+
+The cloned folder is only the source. Keep it to update or uninstall.
+
+## Update
+
+```bash
+cd uconsole-aio-panel
+git pull
+./install.sh
+```
+
+Already installed parts are detected and skipped.
+
 ## Antennas
 
 The panel shows the quarter-wave (¼λ) whip length for the two monitoring modes:
