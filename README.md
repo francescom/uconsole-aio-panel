@@ -1,12 +1,12 @@
 # uConsole AIO Panel
 
-A small graphical control panel for the **ClockworkPi uConsole AIO board**: power each module on or off and pick what the SDR and GPS are used for, without touching the terminal.
+A small graphical control panel for the **HackerGadgets AIO v2 board** for the ClockworkPi uConsole: power each module on or off and pick what the SDR and GPS are used for, without touching the terminal.
 
 ![AIO Control panel](docs/screenshot.png)
 
 ## What it does
 
-- **Powers the AIO modules** through their GPIO pins (WiFi 23, GPS 27, LoRa 16, SDR 7).
+- **Powers the AIO modules** through their GPIO pins (USB ports 23, GPS 27, LoRa 16, SDR 7), with the real state read at boot too (SDR rail on by default).
 - **Frees the SDR dongle for the selected mode.** An RTL-SDR can be opened by one program at a time, so the panel stops whatever the selected mode does not need:
   - **TAR**: `readsb` + `tar1090`, aircraft map in the browser.
   - **AIS**: [AIS-catcher](https://github.com/jvde-github/AIS-catcher), ship map on http://localhost:8100 and NMEA on UDP 10110.
@@ -18,6 +18,10 @@ A small graphical control panel for the **ClockworkPi uConsole AIO board**: powe
 - **Starts and stops Meshtastic** (`meshtasticd`) together with the LoRa module.
 - Asks for your password **once** with a graphical prompt, only when sudo needs it.
 - Stops each module's services **before** cutting its power.
+
+## Related
+
+For a tray icon, CLI commands, power telemetry, rail states at boot and RTC sync, see [hackergadgets/aiov2_ctl](https://github.com/hackergadgets/aiov2_ctl). It manages the board itself, while this panel picks what the SDR and GPS are used for and swaps the services. The two work well together.
 
 ## Safety first
 
@@ -31,7 +35,7 @@ The installer is built not to break your system:
 
 ## Requirements
 
-- ClockworkPi uConsole with the AIO board. **Tested on CM5** with Raspberry Pi OS trixie (arm64).
+- ClockworkPi uConsole with the HackerGadgets AIO v2 board. **Tested on CM5** with Raspberry Pi OS trixie (arm64).
 - Bookworm arm64 is supported by the installer but untested.
 - On CM4 the AIO pins may differ: check them before use. They are at the top of `uconsole-aio-panel.sh`.
 - `yad`, which the installer adds if missing.

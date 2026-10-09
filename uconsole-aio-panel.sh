@@ -4,8 +4,8 @@
 
 # --- Configuration ----------------------------------------------------------
 
-# AIO board GPIO pins (tested on CM5)
-PIN_WIFI=23
+# AIO v2 board GPIO pins (tested on CM5), same mapping as hackergadgets/aiov2_ctl
+PIN_USB=23     # AIO USB ports (e.g. a WiFi 1200 dongle)
 PIN_GPS=27
 PIN_LORA=16
 PIN_SDR=7
@@ -42,9 +42,21 @@ auth() {
     done
 }
 
-# TRUE if the pin is an output driven high
+# Rail state from the pin level ("hi"/"lo"). After boot the pins are not driven
+# yet (level "--"): then the AIO v2 default applies, SDR on, everything else off.
+# Same logic as hackergadgets/aiov2_ctl.
 pin_on() {
-    pinctrl get "$1" | grep -q "op dh" && echo "TRUE" || echo "FALSE"
+    local out
+    out=$(pinctrl get "$1")
+    if [[ "$out" =~ \|\ hi ]]; then
+        echo "TRUE"
+    elif [[ "$out" =~ \|\ lo ]]; then
+        echo "FALSE"
+    elif [ "$1" = "$PIN_SDR" ]; then
+        echo "TRUE"
+    else
+        echo "FALSE"
+    fi
 }
 
 pin_set() {
@@ -93,7 +105,7 @@ svc_start() {
 
 auth
 
-WIFI_ST=$(pin_on $PIN_WIFI)
+USB_ST=$(pin_on $PIN_USB)
 GPS_ST=$(pin_on $PIN_GPS)
 LORA_ST=$(pin_on $PIN_LORA)
 SDR_ST=$(pin_on $PIN_SDR)
@@ -119,7 +131,7 @@ OUTPUT=$(yad --title="uConsole AIO Control" \
     --window-icon="network-wireless" \
     --text="<b>AIO Board Hardware Control</b>\nChoose what to power on and how to use it:" \
     --form --width=340 --button="Apply:0" --button="Close:1" \
-    --field="WiFi 1200 (Wireless network):CHK" "$WIFI_ST" \
+    --field="USB/WiFi 1200 (AIO USB ports):CHK" "$USB_ST" \
     --field="GPS (Position, 1575MHz):CHK" "$GPS_ST" \
     --field="LoRa (Meshtastic, 868MHz):CHK" "$LORA_ST" \
     --field="SDR (Radio receiver):CHK" "$SDR_ST" \
@@ -128,7 +140,7 @@ OUTPUT=$(yad --title="uConsole AIO Control" \
 
 # --- 3. Apply ---------------------------------------------------------------
 
-IFS='|' read -r WIFI_NEW GPS_NEW LORA_NEW SDR_NEW SDR_MODE GPS_MODE _ <<< "$OUTPUT"
+IFS='|' read -r USB_NEW GPS_NEW LORA_NEW SDR_NEW SDR_MODE GPS_MODE _ <<< "$OUTPUT"
 
 mkdir -p "$(dirname "$CONF")"
 cat > "$CONF" <<EOF
@@ -162,7 +174,7 @@ if [ "$GPS_NEW" = "FALSE" ] || [ "$GPS_MODE" = "$GPS_SOLO" ]; then
     svc_stop gpsd.socket gpsd
 fi
 
-pin_set $PIN_WIFI "$WIFI_NEW"
+pin_set $PIN_USB "$USB_NEW"
 pin_set $PIN_GPS "$GPS_NEW"
 pin_set $PIN_LORA "$LORA_NEW"
 pin_set $PIN_SDR "$SDR_NEW"
