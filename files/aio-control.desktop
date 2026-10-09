@@ -1,0 +1,9 @@
+[Desktop Entry]
+Version=1.0
+Type=Application
+Name=AIO Control
+Comment=uConsole AIO board hardware control
+Exec=/usr/local/bin/uconsole-aio-panel
+Icon=preferences-system-network
+Terminal=false
+Categories=Settings;HardwareSettings;

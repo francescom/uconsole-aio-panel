@@ -1,0 +1,13 @@
+[Unit]
+Description=AIS-catcher, AIS ship receiver (managed by uconsole-aio-panel)
+After=network.target
+
+[Service]
+# -N 8100: ship map web UI; -u: NMEA data for OpenCPN / Signal K
+ExecStart=/usr/bin/AIS-catcher -N 8100 -u 127.0.0.1 10110
+DynamicUser=yes
+SupplementaryGroups=plugdev
+Restart=on-failure
+RestartSec=5
+
+# No [Install] section: never starts at boot, only the panel starts it

@@ -1,0 +1,12 @@
+[Unit]
+Description=Signal K, marine data server (managed by uconsole-aio-panel)
+
+[Service]
+# Everything lives in ~/signalk: Node.js, Signal K and its config
+WorkingDirectory=%h/signalk
+Environment=PATH=%h/signalk/node/bin:/usr/bin:/bin
+ExecStart=%h/signalk/node_modules/.bin/signalk-server -c %h/signalk/config
+Restart=on-failure
+RestartSec=5
+
+# No [Install] section: never starts at boot, only the panel starts it
